@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cassino — Califórnia RP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
+<style>
+  :root {
+    --bg: #0b0b0b;
+    --panel: #161513;
+    --panel-border: #2a2823;
+    --gold: #c9a24b;
+    --gold-bright: #e8c874;
+    --fg: #f3f0e8;
+    --muted: #8f897a;
+    --chip-red: #a8433f;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  body {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100%;
+    padding: 24px;
+    padding-top: calc(24px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    overflow: hidden;
+  }
+
+  /* ---------- decoracao de fundo ---------- */
+  .bg-pattern {
+    position: fixed; inset: 0; z-index: 0;
+    background-color: var(--bg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Ccircle cx='35' cy='35' r='26' fill='none' stroke='%23c9a24b' stroke-width='1' opacity='0.14'/%3E%3Ctext x='35' y='45' font-size='24' text-anchor='middle' fill='%23c9a24b' opacity='0.22' font-family='Georgia,serif'%3E%E2%99%A0%3C/text%3E%3Ccircle cx='105' cy='105' r='26' fill='none' stroke='%23c9a24b' stroke-width='1' opacity='0.14'/%3E%3Ctext x='105' y='115' font-size='24' text-anchor='middle' fill='%23c9a24b' opacity='0.22' font-family='Georgia,serif'%3E%E2%99%A3%3C/text%3E%3C/svg%3E");
+    background-size: 140px 140px;
+  }
+  .dice-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .die { position: absolute; color: var(--gold); opacity: 0.07; }
+  .die--a { top: 4%;  left: 4%;  width: 100px; transform: rotate(-18deg); }
+  .die--b { top: 8%;  right: 5%; width: 130px; transform: rotate(24deg); }
+  .die--c { bottom: 7%; left: 6%; width: 110px; transform: rotate(14deg); }
+  .die--d { bottom: 5%; right: 4%; width: 85px;  transform: rotate(-26deg); }
+
+  .card-float { position: absolute; font-family: Georgia, serif; opacity: 0.09; color: var(--gold); line-height: 1; pointer-events: none; }
+  .card-float--a { top: 16%; left: 12%; font-size: 90px; transform: rotate(-12deg); }
+  .card-float--b { top: 20%; right: 10%; font-size: 70px; transform: rotate(18deg); color: var(--chip-red); }
+  .card-float--c { bottom: 18%; right: 14%; font-size: 100px; transform: rotate(10deg); }
+  .card-float--d { bottom: 22%; left: 9%; font-size: 65px; transform: rotate(-16deg); color: var(--chip-red); }
+
+  /* ---------- card base (reaproveitado pela tela de senha e pelo app) ---------- */
+  .card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 400px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 36px 32px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+  .rule { width: 52px; height: 2px; background: var(--gold); margin: 14px auto 10px; }
+  .subtitle { text-align: center; color: var(--muted); font-size: 13px; margin: 0; }
+
+  /* ---------- tela de senha ---------- */
+  .gate {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background: var(--bg);
+    transition: opacity .4s ease;
+  }
+  .gate--hidden { opacity: 0; pointer-events: none; }
+  .gate-card { text-align: center; }
+  .welcome { color: var(--fg); font-size: 14px; margin: 18px 0 26px; line-height: 1.5; }
+  .gate-card label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; text-align: left; }
+  .gate-card input[type=password] {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--panel-border);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 17px;
+    letter-spacing: 2px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .gate-card input[type=password]:focus { border-color: var(--gold); }
+  .gate-card button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 9px;
+    border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: #0b0b0b;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .pass-error { min-height: 18px; color: var(--chip-red); font-size: 12px; margin-top: 10px; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .shake .card { animation: shake .3s; }
+
+  /* ---------- app principal ---------- */
+  .hidden { display: none; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  input[type=text] {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--panel-border);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 17px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input[type=text]:focus { border-color: var(--gold); }
+  .quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .quick button {
+    flex: 1 1 auto;
+    background: var(--panel-border);
+    border: none;
+    color: var(--muted);
+    padding: 6px 4px;
+    border-radius: 7px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .quick button:hover { background: #3a382f; color: var(--gold-bright); }
+
+  .toggle { display: flex; gap: 10px; margin: 28px 0 4px; }
+  .toggle button {
+    flex: 1; text-align: left;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+    background: var(--bg);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .toggle button .t1 { display: block; font-size: 13px; font-weight: 600; color: var(--fg); }
+  .toggle button .t2 { display: block; font-size: 12px; margin-top: 2px; }
+  .toggle button.active { border-color: var(--gold); background: rgba(201,162,75,0.08); }
+  .toggle button.active .t2 { color: var(--gold-bright); }
+
+  .result { margin-top: 28px; border-top: 1px solid var(--panel-border); padding-top: 20px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .row .rlabel { color: var(--muted); font-size: 13px; }
+  .row .rvalue { font-size: 16px; font-weight: 600; }
+  .row.fee .rvalue { color: var(--chip-red); }
+  .row.final { margin-bottom: 0; }
+  .row.final .rvalue { font-size: 24px; color: var(--gold-bright); font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="bg-pattern" aria-hidden="true"></div>
+  <div class="dice-bg" aria-hidden="true">
+    <svg class="die die--a" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="18" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="30" cy="30" r="7" fill="currentColor"/><circle cx="70" cy="70" r="7" fill="currentColor"/><circle cx="50" cy="50" r="7" fill="currentColor"/></svg>
+    <svg class="die die--b" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="18" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="30" cy="30" r="7" fill="currentColor"/><circle cx="70" cy="30" r="7" fill="currentColor"/><circle cx="30" cy="70" r="7" fill="currentColor"/><circle cx="70" cy="70" r="7" fill="currentColor"/><circle cx="50" cy="50" r="7" fill="currentColor"/></svg>
+    <svg class="die die--c" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="18" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="30" cy="30" r="7" fill="currentColor"/><circle cx="70" cy="30" r="7" fill="currentColor"/><circle cx="30" cy="70" r="7" fill="currentColor"/><circle cx="70" cy="70" r="7" fill="currentColor"/></svg>
+    <svg class="die die--d" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="18" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="30" cy="30" r="7" fill="currentColor"/><circle cx="30" cy="50" r="7" fill="currentColor"/><circle cx="30" cy="70" r="7" fill="currentColor"/><circle cx="70" cy="30" r="7" fill="currentColor"/><circle cx="70" cy="50" r="7" fill="currentColor"/><circle cx="70" cy="70" r="7" fill="currentColor"/></svg>
+  </div>
+  <div class="card-float card-float--a">&#9824;</div>
+  <div class="card-float card-float--b">&#9829;</div>
+  <div class="card-float card-float--c">&#9827;</div>
+  <div class="card-float card-float--d">&#9830;</div>
+
+  <div id="gate" class="gate">
+    <div class="card gate-card">
+      <h1>Cassino</h1>
+      <div class="rule"></div>
+      <div class="subtitle">Califórnia RP</div>
+      <p class="welcome">Bem-vindo ao Cassino da Califórnia RP.<br>Digite a senha de acesso para continuar.</p>
+      <form id="passForm">
+        <label for="passInput">Senha</label>
+        <input type="password" id="passInput" autocomplete="off" placeholder="••••••••" autofocus>
+        <button type="submit">Entrar</button>
+        <div class="pass-error" id="passError"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="appContent" class="card hidden">
+    <h1>Cassino</h1>
+    <div class="rule"></div>
+    <div class="subtitle" style="margin-bottom:30px;">Calculadora de lavagem</div>
+
+    <label for="valor">Valor a lavar</label>
+    <input type="text" id="valor" inputmode="numeric" value="30000000">
+    <div class="quick" id="quick"></div>
+
+    <div class="toggle">
+      <button id="btnParceria" class="active">
+        <span class="t1">Com parceria</span>
+        <span class="t2">Retém 30%</span>
+      </button>
+      <button id="btnSemParceria">
+        <span class="t1">Sem parceria</span>
+        <span class="t2">Retém 35%</span>
+      </button>
+    </div>
+
+    <div class="result">
+      <div class="row fee">
+        <span class="rlabel">Comissão da casa</span>
+        <span class="rvalue" id="comissao">R$ 0,00</span>
+      </div>
+      <div class="row final">
+        <span class="rlabel">Valor devolvido</span>
+        <span class="rvalue" id="devolvido">R$ 0,00</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------- tela de senha ----------
+  const CORRECT_PASS = "calicass";
+  const gate = document.getElementById('gate');
+  const appContent = document.getElementById('appContent');
+  const passForm = document.getElementById('passForm');
+  const passInput = document.getElementById('passInput');
+  const passError = document.getElementById('passError');
+
+  passForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (passInput.value.trim().toLowerCase() === CORRECT_PASS) {
+      gate.classList.add('gate--hidden');
+      appContent.classList.remove('hidden');
+      setTimeout(() => { gate.style.display = 'none'; }, 400);
+    } else {
+      passError.textContent = 'Senha incorreta. Tente novamente.';
+      passInput.value = '';
+      gate.classList.add('shake');
+      setTimeout(() => gate.classList.remove('shake'), 300);
+    }
+  });
+
+  // ---------- calculadora ----------
+  const valorInput = document.getElementById('valor');
+  const btnParceria = document.getElementById('btnParceria');
+  const btnSemParceria = document.getElementById('btnSemParceria');
+  const comissaoEl = document.getElementById('comissao');
+  const devolvidoEl = document.getElementById('devolvido');
+  const quickWrap = document.getElementById('quick');
+
+  let taxa = 0.30;
+
+  function formatBRL(n) {
+    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
+  }
+
+  function parseValor() {
+    const raw = valorInput.value.replace(/[^\d]/g, '');
+    return raw ? parseInt(raw, 10) : 0;
+  }
+
+  function calcular() {
+    const total = parseValor();
+    const comissao = total * taxa;
+    comissaoEl.textContent = formatBRL(comissao);
+    devolvidoEl.textContent = formatBRL(total - comissao);
+  }
+
+  valorInput.addEventListener('input', calcular);
+
+  btnParceria.addEventListener('click', () => {
+    taxa = 0.30;
+    btnParceria.classList.add('active');
+    btnSemParceria.classList.remove('active');
+    calcular();
+  });
+
+  btnSemParceria.addEventListener('click', () => {
+    taxa = 0.35;
+    btnSemParceria.classList.add('active');
+    btnParceria.classList.remove('active');
+    calcular();
+  });
+
+  [1, 5, 10, 30, 50, 100].forEach(v => {
+    const b = document.createElement('button');
+    b.textContent = v + 'kk';
+    b.addEventListener('click', () => {
+      valorInput.value = (v * 1000000).toString();
+      calcular();
+    });
+    quickWrap.appendChild(b);
+  });
+
+  calcular();
+</script>
+</body>
+</html>
