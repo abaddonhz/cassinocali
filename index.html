@@ -213,11 +213,11 @@
     <div class="toggle">
       <button id="btnParceria" class="active">
         <span class="t1">Com parceria</span>
-        <span class="t2">Retém 30%</span>
+        <span class="t2">Retém 25%</span>
       </button>
       <button id="btnSemParceria">
         <span class="t1">Sem parceria</span>
-        <span class="t2">Retém 35%</span>
+        <span class="t2">Retém 30%</span>
       </button>
     </div>
 
@@ -264,7 +264,7 @@
   const devolvidoEl = document.getElementById('devolvido');
   const quickWrap = document.getElementById('quick');
 
-  let taxa = 0.30;
+  let taxa = 0.25;
 
   function formatBRL(n) {
     return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
@@ -285,14 +285,14 @@
   valorInput.addEventListener('input', calcular);
 
   btnParceria.addEventListener('click', () => {
-    taxa = 0.30;
+    taxa = 0.25;
     btnParceria.classList.add('active');
     btnSemParceria.classList.remove('active');
     calcular();
   });
 
   btnSemParceria.addEventListener('click', () => {
-    taxa = 0.35;
+    taxa = 0.30;
     btnSemParceria.classList.add('active');
     btnParceria.classList.remove('active');
     calcular();
