@@ -205,12 +205,12 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
   </div>
 
 <div id="appContent" class="dashboard hidden">
-<header class="topbar"><div><span class="eyebrow">CALIFÓRNIA ROLEPLAY / ÁREA INTERNA</span><h1>CASSINO <span>♠</span></h1></div><button id="soundBtn" class="sound-btn" type="button">♪ Ativar som</button></header>
-<section class="hero"><span class="eyebrow">CENTRAL DE OPERAÇÕES</span><h2>O controle está nos <em>detalhes.</em></h2><p>Lavagem, armamentos, munições e equipamentos. Tudo em um só lugar.</p></section>
+<header class="topbar"><div><span class="eyebrow">CALIFÓRNIA ROLEPLAY / ÁREA INTERNA</span><h1>CASSINO <span>♠</span></h1></div></header>
+<section class="hero"><span class="eyebrow">CENTRAL DE OPERAÇÕES</span><h2>Fazer o bem <em>sem olhar a quem.</em></h2><p>Sua central do Cassino: calcule valores de lavagem e consulte as tabelas de preços de armas, munições e equipamentos.</p></section>
 <nav class="tabs" aria-label="Navegação"><button class="tab active" data-page="lavagem">♠ Lavagem</button><button class="tab" data-page="armas">◎ Armas</button><button class="tab" data-page="municoes">◈ Munições</button><button class="tab" data-page="equipamentos">▣ Equipamentos</button></nav>
 <section id="lavagem" class="page active"><div class="two-col"><article class="surface"><span class="eyebrow">01 / CALCULADORA</span><h3>Lavagem de valores</h3><label for="valor">Valor a lavar</label><input type="text" id="valor" inputmode="numeric" value="30000000"><div class="quick" id="quick"></div><div class="toggle"><button id="btnParceria" class="active"><span class="t1">Com parceria</span><span class="t2">Retém 25%</span></button><button id="btnSemParceria"><span class="t1">Sem parceria</span><span class="t2">Retém 30%</span></button></div><p class="hint">Os percentuais indicam a comissão retida pela casa.</p></article><article class="surface"><span class="eyebrow">02 / RESULTADO</span><h3>Resumo da operação</h3><div class="stat"><span>Valor bruto</span><strong id="bruto">R$ 0,00</strong></div><div class="stat"><span>Comissão da casa</span><strong id="comissao">R$ 0,00</strong></div><div class="stat primary"><span>Valor devolvido</span><strong id="devolvido">R$ 0,00</strong></div></article></div></section>
 <section id="armas" class="page"></section><section id="municoes" class="page"></section><section id="equipamentos" class="page"></section>
-<footer>CASSINO ♠ CALIFÓRNIA RP · PAINEL DE REFERÊNCIA ROLEPLAY</footer>
+<footer>CASSINO ♠ CALIFÓRNIA RP · PAINEL DE GERENCIAMENTO</footer>
 </div>
 <script>
   // ---------- tela de senha ----------
@@ -224,6 +224,7 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
   passForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (passInput.value.trim().toLowerCase() === CORRECT_PASS) {
+      clickSound();
       gate.classList.add('gate--hidden');
       appContent.classList.remove('hidden');
       setTimeout(() => { gate.style.display = 'none'; }, 400);
@@ -270,6 +271,7 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     btnParceria.classList.add('active');
     btnSemParceria.classList.remove('active');
     calcular();
+    clickSound();
   });
 
   btnSemParceria.addEventListener('click', () => {
@@ -277,6 +279,7 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     btnSemParceria.classList.add('active');
     btnParceria.classList.remove('active');
     calcular();
+    clickSound();
   });
 
   [1, 5, 10, 30, 50, 100].forEach(v => {
@@ -285,6 +288,7 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     b.addEventListener('click', () => {
       valorInput.value = (v * 1000000).toString();
       calcular();
+      clickSound();
     });
     quickWrap.appendChild(b);
   });
@@ -304,9 +308,8 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     const render=()=>{body.replaceChildren();rows.filter(r=>r[0].toLowerCase().includes(search.value.toLowerCase())).forEach(r=>{const tr=document.createElement('tr');['01',r[0],formatBRL(r[1]),formatBRL(r[2])].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});body.append(tr)});if(!body.children.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=4;td.textContent='Nenhum item encontrado';tr.append(td);body.append(tr)}};
     search.addEventListener('input',render);render();
   });
-  let soundEnabled=false,audioContext;
-  function clickSound(){if(!soundEnabled)return;try{audioContext ||= new (window.AudioContext||window.webkitAudioContext)();const o=audioContext.createOscillator(),g=audioContext.createGain();o.frequency.setValueAtTime(650,audioContext.currentTime);o.frequency.exponentialRampToValueAtTime(380,audioContext.currentTime+.06);g.gain.setValueAtTime(.025,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.08);o.connect(g);g.connect(audioContext.destination);o.start();o.stop(audioContext.currentTime+.08)}catch(e){}}
-  document.getElementById('soundBtn').addEventListener('click',e=>{soundEnabled=!soundEnabled;e.currentTarget.textContent=soundEnabled?'♪ Som ligado':'♪ Ativar som';clickSound()});
+  let soundEnabled=true,audioContext;
+  function clickSound(){if(!soundEnabled)return;try{audioContext ||= new (window.AudioContext||window.webkitAudioContext)();const o=audioContext.createOscillator(),g=audioContext.createGain();o.type='sine';o.frequency.setValueAtTime(420,audioContext.currentTime);o.frequency.exponentialRampToValueAtTime(300,audioContext.currentTime+.045);g.gain.setValueAtTime(.009,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.055);o.connect(g);g.connect(audioContext.destination);o.start();o.stop(audioContext.currentTime+.06)}catch(e){}}
   document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===tab.dataset.page));clickSound()}));
   document.querySelectorAll('.toggle button').forEach(b=>b.addEventListener('click',clickSound));
 </script>
