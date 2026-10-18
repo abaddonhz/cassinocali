@@ -208,10 +208,11 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
 <div id="appContent" class="dashboard hidden">
 <header class="topbar"><div><span class="eyebrow">CALIFÓRNIA ROLEPLAY / ÁREA INTERNA</span><h1>CASSINO <span>♠</span></h1></div></header>
 <section class="hero"><span class="eyebrow">CENTRAL DE OPERAÇÕES</span><h2>Fazer o bem <em>sem olhar a quem.</em></h2><p>Sua central do Cassino: calcule valores de lavagem e consulte as tabelas de preços de armas, munições e equipamentos.</p></section>
-<nav class="tabs" aria-label="Navegação"><button class="tab active" data-page="lavagem">♠ Lavagem</button><button class="tab" data-page="armas">◎ Armas</button><button class="tab" data-page="municoes">◈ Munições</button><button class="tab" data-page="equipamentos">▣ Equipamentos</button><button class="tab" data-page="vendas">◇ Vendas</button><button class="tab" data-page="juramento">✦ Juramento</button></nav>
+<nav class="tabs" aria-label="Navegação"><button class="tab active" data-page="lavagem">♠ Lavagem normal</button><button class="tab" data-page="lavagem-pessoal">♣ Lavagem pessoal</button><button class="tab" data-page="armas">◎ Armas</button><button class="tab" data-page="municoes">◈ Munições</button><button class="tab" data-page="equipamentos">▣ Equipamentos</button><button class="tab" data-page="vendas">◇ Vendas</button></nav>
 <section id="lavagem" class="page active"><div class="two-col"><article class="surface"><span class="eyebrow">01 / CALCULADORA</span><h3>Lavagem de valores</h3><label for="valor">Valor a lavar</label><input type="text" id="valor" inputmode="numeric" value="30000000"><div class="quick" id="quick"></div><div class="toggle"><button id="btnParceria" class="active"><span class="t1">Com parceria</span><span class="t2">Retém 25%</span></button><button id="btnSemParceria"><span class="t1">Sem parceria</span><span class="t2">Retém 30%</span></button></div><p class="hint">Os percentuais indicam a comissão retida pela casa.</p></article><article class="surface"><span class="eyebrow">02 / RESULTADO</span><h3>Resumo da operação</h3><div class="stat"><span>Devolver ao cliente</span><strong id="devolvido">R$ 0,00</strong></div><div class="stat"><span>Taxa da bancada (15%)</span><strong id="bancada">R$ 0,00</strong></div><div class="stat"><span>Lucro disponível para dividir</span><strong id="lucroCasa">R$ 0,00</strong></div><div class="stat primary"><span>Para o painel (1/3 do lucro)</span><strong id="lucroPainel">R$ 0,00</strong></div><div class="stat primary"><span>Para quem lavou (2/3 do lucro)</span><strong id="lucroLavador">R$ 0,00</strong></div><p class="hint">A divisão acontece após a taxa da bancada. O cliente recebe conforme a parceria escolhida.</p></article></div></section>
+<section id="lavagem-pessoal" class="page"><div class="two-col"><article class="surface"><span class="eyebrow">01 / CALCULADORA PESSOAL</span><h3>Lavagem pessoal</h3><label for="valorPessoal">Valor que você vai lavar</label><input type="text" id="valorPessoal" inputmode="numeric" value="30000000"><div class="quick" id="quickPessoal"></div><p class="hint">Aqui você lava seu próprio dinheiro. Não há cliente para receber repasse nem taxa de parceria.</p><p class="hint">A bancada recebe 15% do valor bruto. Do valor restante, 1/3 vai para o painel e 2/3 ficam com você.</p></article><article class="surface"><span class="eyebrow">02 / RESULTADO PESSOAL</span><h3>Seu resultado</h3><div class="stat"><span>Taxa da bancada (15%)</span><strong id="bancadaPessoal">R$ 0,00</strong></div><div class="stat"><span>Valor disponível após a bancada</span><strong id="disponivelPessoal">R$ 0,00</strong></div><div class="stat"><span>Repasse ao painel (1/3)</span><strong id="painelPessoal">R$ 0,00</strong></div><div class="stat primary"><span>Você recebe (2/3)</span><strong id="recebePessoal">R$ 0,00</strong></div></article></div></section>
 <section id="vendas" class="page"><div class="table-head"><div><span class="eyebrow">REGISTRO DE OPERAÇÕES</span><h3>Nova venda</h3><span class="hint">Preencha os dados e confira o total antes de enviar.</span></div></div><form id="saleForm" class="two-col"><article class="surface sales-fields"><span class="eyebrow">01 / IDENTIFICAÇÃO E PRODUTO</span><label for="seller">Nome do vendedor</label><input id="seller" class="sale-input" maxlength="70" required placeholder="Nome na cidade"><label for="passport">Passaporte / ID do vendedor</label><input id="passport" class="sale-input" maxlength="20" required placeholder="Ex.: 1527"><label for="category">Categoria</label><select id="category" class="sale-input"><option value="armas">Armas</option><option value="municoes">Munições</option><option value="equipamentos">Equipamentos</option></select><label for="product">Produto</label><select id="product" class="sale-input"></select><label for="quantity">Quantidade</label><input id="quantity" class="sale-input" type="number" min="1" max="100000" step="1" required value="1"><label for="priceType">Tabela de preço</label><select id="priceType" class="sale-input"><option value="normal">Preço normal</option><option value="parceria">Com parceria</option></select></article><article class="surface sales-fields"><span class="eyebrow">02 / DESTINO E CONFERÊNCIA</span><label for="faction">Facção compradora</label><select id="faction" class="sale-input" required></select><div class="stat"><span>Preço unitário</span><strong id="unitPrice">R$ 0,00</strong></div><div class="stat primary"><span>Valor total da venda</span><strong id="saleTotal">R$ 0,00</strong></div><p class="hint">O registro será enviado ao canal de vendas configurado pelo administrador.</p><button class="sale-submit" id="submitSale" type="submit">Registrar venda no Discord</button><p id="saleStatus" role="status" class="hint"></p></article></form></section><section id="armas" class="page"></section><section id="municoes" class="page"></section><section id="equipamentos" class="page"></section>
-<section id="juramento" class="page"><div class="table-head"><div><span class="eyebrow">CASSINO • REGISTRO DE JURAMENTO</span><h3>Juramento de Fidelidade</h3><span class="hint">Preencha as informações do seu personagem e envie seu compromisso à família.</span></div></div><form id="pledgeForm" class="surface pledge-form"><span class="eyebrow">IDENTIFICAÇÃO</span><label for="pledgeName">Nome na cidade</label><input id="pledgeName" maxlength="60" minlength="2" required placeholder="Ex.: Bruna Moundest"><label for="pledgeId">ID na cidade</label><input id="pledgeId" maxlength="15" pattern="[0-9]+" required placeholder="Ex.: 1547" inputmode="numeric"><div class="eyebrow" style="margin-top:28px">COMPROMISSO COM A FAMÍLIA</div><label for="pledgeLoyalty">Você jura fidelidade à facção?</label><textarea id="pledgeLoyalty" maxlength="500" minlength="2" required placeholder="Escreva sua resposta..."></textarea><label for="pledgeRespect">Jura agir com lealdade e respeito?</label><textarea id="pledgeRespect" maxlength="500" minlength="2" required placeholder="Escreva sua resposta..."></textarea><label for="pledgeCommitment">Qual seu compromisso com a família?</label><textarea id="pledgeCommitment" maxlength="700" minlength="2" required placeholder="Escreva com suas palavras..."></textarea><button class="sale-submit" id="pledgeSubmit" type="submit">Enviar juramento ao Discord</button><p id="pledgeStatus" role="status" class="hint"></p><p class="hint">O formulário publica o juramento no canal configurado. Para alterar automaticamente o apelido e atribuir o cargo, será necessária uma integração de login com Discord.</p></form></section><footer>CASSINO ♠ CALIFÓRNIA RP · PAINEL DE GERENCIAMENTO</footer>
+<footer>CASSINO ♠ CALIFÓRNIA RP · PAINEL DE GERENCIAMENTO</footer>
 </div>
 <script>
   // ---------- tela de senha ----------
@@ -273,6 +274,33 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     lucroLavadorEl.textContent = formatBRL(lucroLavador);
     devolvidoEl.textContent = formatBRL(total - comissao);
   }
+
+  // Lavagem pessoal: o proprietário do dinheiro recebe a parte restante.
+  const valorPessoalInput = document.getElementById('valorPessoal');
+  function calcularPessoal() {
+    const bruto = Number(valorPessoalInput.value.replace(/[^\d]/g, '')) || 0;
+    const bancada = bruto * 0.15;
+    const disponivel = bruto - bancada;
+    const painel = disponivel / 3;
+    const pessoal = disponivel - painel;
+    document.getElementById('bancadaPessoal').textContent = formatBRL(bancada);
+    document.getElementById('disponivelPessoal').textContent = formatBRL(disponivel);
+    document.getElementById('painelPessoal').textContent = formatBRL(painel);
+    document.getElementById('recebePessoal').textContent = formatBRL(pessoal);
+  }
+  valorPessoalInput.addEventListener('input', calcularPessoal);
+  [1, 5, 10, 30, 50, 100].forEach(v => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = v + 'kk';
+    b.addEventListener('click', () => {
+      valorPessoalInput.value = String(v * 1000000);
+      calcularPessoal();
+      clickSound();
+    });
+    document.getElementById('quickPessoal').appendChild(b);
+  });
+  calcularPessoal();
 
   valorInput.addEventListener('input', calcular);
 
@@ -341,13 +369,6 @@ html,body{height:auto;min-height:100%;overflow:auto}body{display:block;padding:0
     finally{button.disabled=false}
   });
 
-  const pledgeForm=document.getElementById('pledgeForm');
-  pledgeForm.addEventListener('submit',async e=>{
-    e.preventDefault();const btn=document.getElementById('pledgeSubmit'),status=document.getElementById('pledgeStatus');
-    const payload={nome:document.getElementById('pledgeName').value.trim(),idCidade:document.getElementById('pledgeId').value.trim(),fidelidade:document.getElementById('pledgeLoyalty').value.trim(),lealdade:document.getElementById('pledgeRespect').value.trim(),compromisso:document.getElementById('pledgeCommitment').value.trim()};
-    btn.disabled=true;status.textContent='Enviando juramento...';
-    try{const response=await fetch('/api/juramento',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await response.json();if(!response.ok)throw Error(result.error||'Não foi possível enviar');status.textContent='Juramento enviado ao Discord com sucesso!';pledgeForm.reset();clickSound()}catch(err){status.textContent='Erro: '+err.message}finally{btn.disabled=false}
-  });
 </script>
 </body>
 </html>
